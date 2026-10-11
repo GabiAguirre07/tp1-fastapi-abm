@@ -6,23 +6,16 @@ decide los códigos de respuesta. No contiene lógica de almacenamiento.
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from models.users import User, UserCreate, UserUpdate
 from repositories.users import RepositorioUsuarios, obtener_repositorio_usuarios
+from routers.comun import no_encontrado
 
 router = APIRouter(prefix="/users", tags=["Usuarios"])
 
 # Repositorio inyectado por FastAPI en cada endpoint que lo declare.
 RepoUsuarios = Annotated[RepositorioUsuarios, Depends(obtener_repositorio_usuarios)]
-
-
-def _no_encontrado(user_id: int) -> HTTPException:
-    """Construye el error 404 para un usuario inexistente."""
-    return HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Usuario {user_id} no encontrado",
-    )
 
 
 @router.get("")
@@ -36,7 +29,7 @@ def obtener_usuario(user_id: int, repo: RepoUsuarios) -> User:
     """Devuelve un usuario por id. Responde 404 si no existe."""
     usuario = repo.obtener(user_id)
     if usuario is None:
-        raise _no_encontrado(user_id)
+        raise no_encontrado("Usuario", user_id)
 
     return usuario
 
@@ -52,7 +45,7 @@ def actualizar_usuario(user_id: int, cambios: UserUpdate, repo: RepoUsuarios) ->
     """Modifica solo los campos enviados. Responde 404 si no existe."""
     usuario = repo.actualizar(user_id, cambios)
     if usuario is None:
-        raise _no_encontrado(user_id)
+        raise no_encontrado("Usuario", user_id)
 
     return usuario
 
@@ -61,4 +54,4 @@ def actualizar_usuario(user_id: int, cambios: UserUpdate, repo: RepoUsuarios) ->
 def eliminar_usuario(user_id: int, repo: RepoUsuarios) -> None:
     """Elimina un usuario. Responde 204 sin cuerpo, o 404 si no existe."""
     if not repo.eliminar(user_id):
-        raise _no_encontrado(user_id)
+        raise no_encontrado("Usuario", user_id)
