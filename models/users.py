@@ -57,16 +57,3 @@ class User(UserBase):
     """Usuario tal como lo devuelve la API, incluyendo el id generado por el servidor."""
 
     id: int = Field(description="Identificador generado por el servidor", gt=0)
-
-
-# --- Modelos temporales: se eliminan en el Paso 3.4 al reescribir el router ---
-class GetUsersResponse(EsquemaBase):
-    users: list[User]
-
-
-class CreateUserResponse(EsquemaBase):
-    message: str
-
-
-class DeleteUserResponse(EsquemaBase):
-    message: str
