@@ -1,11 +1,15 @@
+"""Punto de entrada de la API: crea la aplicación y registra los routers."""
+
 from fastapi import FastAPI
-from routers import users
+
+from routers import books, users
 
 # Create the application instance
 app = FastAPI()
 
-# Router to user endpoints
+# Routers de cada entidad
 app.include_router(users.router)
+app.include_router(books.router)
 
 
 # Define a GET route for the root URL
