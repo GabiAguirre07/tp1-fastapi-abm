@@ -24,7 +24,11 @@ Los datos se guardan **en memoria**: se pierden al reiniciar la aplicación y al
 2. Crear el entorno virtual:
 
    ```bash
+   # Windows
    python -m venv .venv
+
+   # macOS / Linux
+   python3 -m venv .venv
    ```
 
 3. Activarlo:
